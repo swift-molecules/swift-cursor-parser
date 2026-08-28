@@ -1,7 +1,6 @@
 import Input_Parser_OneOf
 import Input_Parser_Test_Support
 import Parser_Always
-import Parser_Conversion
 import Parser_Map
 import Testing
 
@@ -22,8 +21,8 @@ extension `Parser.OneOf.Sequence`.`Builder Propagation` {
         .Error)
     {
         let alternation = Parser.OneOf.Sequence {
-            Parser.Always<Parser.Test.Input, Void>(()).map(.fixed(Choice.a))
-            Parser.Always<Parser.Test.Input, Void>(()).map(.fixed(Choice.b))
+            Parser.Always<Parser.Test.Input, Void>(()).map { _ in Choice.a }
+            Parser.Always<Parser.Test.Input, Void>(()).map { _ in Choice.b }
         }
 
         var input: Parser.Test.Input = [0x41]

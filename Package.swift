@@ -154,7 +154,6 @@ let package = Package(
                 .target(name: "Input Parser OneOf"),
                 .target(name: "Input Parser Test Support"),
                 .product(name: "Parser Always", package: "swift-parser"),
-                .product(name: "Parser Conversion", package: "swift-parser"),
                 .product(name: "Parser Map", package: "swift-parser"),
             ]
         ),
