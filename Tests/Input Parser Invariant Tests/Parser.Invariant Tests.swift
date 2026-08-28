@@ -2,6 +2,7 @@ import Collection_Parser_Consume
 import Collection_Parser_End
 import Collection_Parser_Prefix
 import Collection_Parser_Rest
+import Either
 import Input_Parser_First
 import Input_Parser_Many
 import Input_Parser_Not
@@ -11,6 +12,7 @@ import Input_Parser_Peek
 import Input_Parser_Test_Support
 import Parser_Always
 import Parser_Fail
+import Parser_Filter
 import Parser_FlatMap
 import Parser_Map
 import Testing
@@ -255,7 +257,7 @@ extension `Parser.Invariant`.`Error Propagation` {
                 let either = error
                     as? Either<
                         Never,
-                        Parser.Constraint.Error
+                        Parser.Consume.Exactly<Parser.Test.Input>.Error
                     >
             else { return false }
             return either.right != nil
@@ -288,7 +290,9 @@ extension `Parser.Invariant`.`Error Propagation` {
                 let either = error
                     as? Either<
                         Parser.EndOfInput.Error,
-                        Parser.Constraint.Error
+                        Parser.Filter<
+                            Parser.First.Element<Parser.Test.Input>
+                        >.Error
                     >
             else { return false }
             return either.right != nil

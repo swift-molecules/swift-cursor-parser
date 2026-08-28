@@ -229,8 +229,10 @@ let package = Package(
                 .target(name: "Input Parser Optionally"),
                 .target(name: "Input Parser Peek"),
                 .target(name: "Input Parser Test Support"),
+                .product(name: "Either", package: "swift-either"),
                 .product(name: "Parser Always", package: "swift-parser"),
                 .product(name: "Parser Fail", package: "swift-parser"),
+                .product(name: "Parser Filter", package: "swift-parser"),
                 .product(name: "Parser FlatMap", package: "swift-parser"),
                 .product(name: "Parser Map", package: "swift-parser"),
                 .product(
