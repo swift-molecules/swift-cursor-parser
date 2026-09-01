@@ -1,7 +1,8 @@
+import Always
+import Always_Parser
 import Input_Parser_First
 import Input_Parser_Many
 import Input_Parser_Test_Support
-import Parser_Always
 import Testing
 
 @Suite
@@ -54,8 +55,8 @@ extension `Parser.Many`.`Edge Case` {
 
     @Test
     func `terminates after a non-consuming success`() throws(any Swift.Error) {
-        let parser = Parser.Many<Parser.Test.Input, Parser.Always<Parser.Test.Input, Int>> {
-            Parser.Always(42)
+        let parser = Parser.Many<Parser.Test.Input, Always<Int>.Parser<Parser.Test.Input>> {
+            Always(42).parser()
         }
         var input = Parser.Test.Input([0x41])
 

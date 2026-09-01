@@ -1,7 +1,8 @@
+import Always
+import Always_Parser
 import Collection_Parser_Consume
 import Input_Parser_First
 import Input_Parser_Test_Support
-import Parser_Always
 import Parser_FlatMap
 import Testing
 
@@ -31,7 +32,7 @@ extension `Parser.FlatMap`.`Edge Case` {
     @Test
     func `upstream failure prevents downstream execution`() {
         let parser = Parser.First.Element<Parser.Test.Input>()
-            .flatMap { _ in Parser.Always<Parser.Test.Input, Int>(0) }
+            .flatMap { _ in Always<Int>.Parser<Parser.Test.Input>(0) }
         var input = Parser.Test.Input([])
 
         #expect(throws: (any Swift.Error).self) {
@@ -41,7 +42,7 @@ extension `Parser.FlatMap`.`Edge Case` {
 
     @Test
     func `downstream failure propagates as right error`() {
-        let parser = Parser.Always<Parser.Test.Input, UInt8>(5)
+        let parser = Always<UInt8>.Parser<Parser.Test.Input>(5)
             .flatMap { count -> Parser.Consume.Exactly<Parser.Test.Input> in
                 Parser.Consume.Exactly(Int(count))
             }

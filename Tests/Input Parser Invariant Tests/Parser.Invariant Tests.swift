@@ -1,3 +1,5 @@
+import Always
+import Always_Parser
 import Collection_Parser_Consume
 import Collection_Parser_End
 import Collection_Parser_Prefix
@@ -10,7 +12,6 @@ import Input_Parser_OneOf
 import Input_Parser_Optionally
 import Input_Parser_Peek
 import Input_Parser_Test_Support
-import Parser_Always
 import Parser_Fail
 import Parser_Filter
 import Parser_FlatMap
@@ -29,7 +30,7 @@ struct `Parser.Invariant` {
 extension `Parser.Invariant`.`Input Position` {
     @Test
     func `Always does not advance input`() {
-        let parser = Parser.Always<Parser.Test.Input, Int>(99)
+        let parser = Always<Int>.Parser<Parser.Test.Input>(99)
         var input = Parser.Test.Input([0x01, 0x02, 0x03])
         let checkpoint = input.checkpoint
 
@@ -192,7 +193,7 @@ extension `Parser.Invariant`.Algebra {
             Parser.Consume.Exactly(Int(count))
         }
 
-        let lhs = Parser.Always<Parser.Test.Input, UInt8>(value).flatMap(f)
+        let lhs = Always<UInt8>.Parser<Parser.Test.Input>(value).flatMap(f)
         let rhs = f(value)
 
         var input1 = Parser.Test.Input([0x01, 0x02, 0x03, 0x04, 0x05, 0x06])
@@ -208,7 +209,7 @@ extension `Parser.Invariant`.Algebra {
     @Test
     func `flatMap right identity`() throws(any Swift.Error) {
         let base = Parser.First.Element<Parser.Test.Input>()
-        let lifted = base.flatMap { Parser.Always<Parser.Test.Input, UInt8>($0) }
+        let lifted = base.flatMap { Always<UInt8>.Parser<Parser.Test.Input>($0) }
 
         var input1 = Parser.Test.Input([0x42, 0x43])
         var input2 = Parser.Test.Input([0x42, 0x43])
@@ -225,7 +226,7 @@ extension `Parser.Invariant`.`Error Propagation` {
     @Test
     func `FlatMap tags upstream error as left`() {
         let parser = Parser.First.Element<Parser.Test.Input>()
-            .flatMap { _ in Parser.Always<Parser.Test.Input, Int>(0) }
+            .flatMap { _ in Always<Int>.Parser<Parser.Test.Input>(0) }
         var input = Parser.Test.Input([])
 
         #expect {
@@ -244,7 +245,7 @@ extension `Parser.Invariant`.`Error Propagation` {
 
     @Test
     func `FlatMap tags downstream error as right`() {
-        let parser = Parser.Always<Parser.Test.Input, UInt8>(10)
+        let parser = Always<UInt8>.Parser<Parser.Test.Input>(10)
             .flatMap { count -> Parser.Consume.Exactly<Parser.Test.Input> in
                 Parser.Consume.Exactly(Int(count))
             }

@@ -53,6 +53,14 @@ let package = Package(
             url: "https://github.com/swift-molecules/swift-collection-parser.git",
             branch: "main"
         ),
+        .package(
+            url: "https://github.com/swift-atoms/swift-always.git",
+            branch: "main"
+        ),
+        .package(
+            url: "https://github.com/swift-molecules/swift-always-parser.git",
+            branch: "main"
+        ),
     ],
     targets: [
         .target(
@@ -136,7 +144,8 @@ let package = Package(
                 .target(name: "Input Parser First"),
                 .target(name: "Input Parser Many"),
                 .target(name: "Input Parser Test Support"),
-                .product(name: "Parser Always", package: "swift-parser"),
+                .product(name: "Always", package: "swift-always"),
+                .product(name: "Always Parser", package: "swift-always-parser"),
             ]
         ),
         .testTarget(
@@ -153,7 +162,8 @@ let package = Package(
                 .target(name: "Input Parser First"),
                 .target(name: "Input Parser OneOf"),
                 .target(name: "Input Parser Test Support"),
-                .product(name: "Parser Always", package: "swift-parser"),
+                .product(name: "Always", package: "swift-always"),
+                .product(name: "Always Parser", package: "swift-always-parser"),
                 .product(name: "Parser Map", package: "swift-parser"),
             ]
         ),
@@ -193,7 +203,8 @@ let package = Package(
             dependencies: [
                 .target(name: "Input Parser First"),
                 .target(name: "Input Parser Test Support"),
-                .product(name: "Parser Always", package: "swift-parser"),
+                .product(name: "Always", package: "swift-always"),
+                .product(name: "Always Parser", package: "swift-always-parser"),
                 .product(name: "Parser FlatMap", package: "swift-parser"),
                 .product(
                     name: "Collection Parser Consume",
@@ -229,7 +240,8 @@ let package = Package(
                 .target(name: "Input Parser Peek"),
                 .target(name: "Input Parser Test Support"),
                 .product(name: "Either", package: "swift-either"),
-                .product(name: "Parser Always", package: "swift-parser"),
+                .product(name: "Always", package: "swift-always"),
+                .product(name: "Always Parser", package: "swift-always-parser"),
                 .product(name: "Parser Fail", package: "swift-parser"),
                 .product(name: "Parser Filter", package: "swift-parser"),
                 .product(name: "Parser FlatMap", package: "swift-parser"),
