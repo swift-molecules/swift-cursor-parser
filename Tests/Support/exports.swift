@@ -1,3 +1,5 @@
-@_exported public import Collection_Test_Support
-@_exported public import Input_Slice
+@_exported public import Checkpoint
+@_exported public import Cursor
+@_exported public import Iterator
+@_exported public import Iterator_Protocol
 @_exported public import Parser
