@@ -15,7 +15,8 @@ extension Parser {
     }
 }
 
-extension Parser.Span: Parser.`Protocol` {
+extension Parser.Span: Parser.`Protocol`
+where Upstream.Output: Copyable & Escapable {
 
     public typealias Input = Input_Namespace::Input.Tracked<Base>
 

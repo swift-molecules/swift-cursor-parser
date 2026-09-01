@@ -1,3 +1,4 @@
+public import Input_Namespace
 public import Input_Protocol
 
 extension Parser {
@@ -45,7 +46,7 @@ extension Parser.Not: Parser.`Protocol` {
     }
 }
 
-extension Parser.`Protocol` where Input: Input.`Protocol` {
+extension Parser.`Protocol` where Input: Input_Namespace::Input.`Protocol` {
 
     @inlinable
     public func not() -> Parser.Not<Self> {

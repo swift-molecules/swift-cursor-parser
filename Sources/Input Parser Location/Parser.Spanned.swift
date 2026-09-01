@@ -1,4 +1,7 @@
 public import Index
+public import Ordinal
+public import Ordinal_Protocol
+public import Tagged
 
 extension Parser {
 
@@ -42,7 +45,11 @@ extension Parser.Spanned {
         start: Index<Element>,
         end: Index<Element>
     ) {
-        self.init(value, start: Int(bitPattern: start), end: Int(bitPattern: end))
+        self.init(
+            value,
+            start: Int(bitPattern: start.ordinal.rawValue),
+            end: Int(bitPattern: end.ordinal.rawValue)
+        )
     }
 }
 

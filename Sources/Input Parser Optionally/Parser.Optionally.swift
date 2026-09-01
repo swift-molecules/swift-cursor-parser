@@ -17,12 +17,13 @@ extension Parser {
 extension Parser.Optionally {
 
     @inlinable
-    public init(@Parser.Take.Builder<Wrapped.Input> _ wrapped: () -> Wrapped) {
+    public init(@Parser.Builder<Wrapped.Input> _ wrapped: () -> Wrapped) {
         self.init(wrapped())
     }
 }
 
-extension Parser.Optionally: Parser.`Protocol` {
+extension Parser.Optionally: Parser.`Protocol`
+where Wrapped.Output: Escapable {
 
     public typealias Input = Wrapped.Input
 

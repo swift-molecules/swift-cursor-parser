@@ -58,6 +58,18 @@ let package = Package(
             branch: "main"
         ),
         .package(
+            url: "https://github.com/swift-atoms/swift-cardinal.git",
+            branch: "main"
+        ),
+        .package(
+            url: "https://github.com/swift-atoms/swift-ordinal.git",
+            branch: "main"
+        ),
+        .package(
+            url: "https://github.com/swift-atoms/swift-tagged.git",
+            branch: "main"
+        ),
+        .package(
             url: "https://github.com/swift-molecules/swift-always-parser.git",
             branch: "main"
         ),
@@ -100,6 +112,7 @@ let package = Package(
             name: "Input Parser Peek",
             dependencies: [
                 .product(name: "Parser", package: "swift-parser"),
+                .product(name: "Input Namespace", package: "swift-input"),
                 .product(name: "Input Protocol", package: "swift-input"),
             ]
         ),
@@ -107,6 +120,7 @@ let package = Package(
             name: "Input Parser Not",
             dependencies: [
                 .product(name: "Parser", package: "swift-parser"),
+                .product(name: "Input Namespace", package: "swift-input"),
                 .product(name: "Input Protocol", package: "swift-input"),
             ]
         ),
@@ -117,6 +131,15 @@ let package = Package(
                 .product(name: "Parser Error", package: "swift-parser"),
                 .product(name: "Input Namespace", package: "swift-input"),
                 .product(name: "Input Protocol", package: "swift-input"),
+                .product(name: "Input Stream", package: "swift-input"),
+                .product(name: "Cardinal", package: "swift-cardinal"),
+                .product(name: "Cardinal Carrier", package: "swift-cardinal"),
+                .product(name: "Cardinal Tagged", package: "swift-cardinal"),
+                .product(name: "Ordinal", package: "swift-ordinal"),
+                .product(name: "Ordinal Cardinal", package: "swift-ordinal"),
+                .product(name: "Ordinal Protocol", package: "swift-ordinal"),
+                .product(name: "Ordinal Tagged", package: "swift-ordinal"),
+                .product(name: "Tagged", package: "swift-tagged"),
                 .product(name: "Index", package: "swift-index"),
                 .product(name: "Text", package: "swift-text"),
                 .product(name: "Either", package: "swift-either"),
@@ -126,6 +149,7 @@ let package = Package(
             name: "Input Parser Test Support",
             dependencies: [
                 .product(name: "Parser", package: "swift-parser"),
+                .product(name: "Input Namespace", package: "swift-input"),
                 .product(name: "Input Slice", package: "swift-input"),
                 .product(name: "Collection Test Support", package: "swift-collection"),
             ],
@@ -154,6 +178,7 @@ let package = Package(
                 .target(name: "Input Parser First"),
                 .target(name: "Input Parser Not"),
                 .target(name: "Input Parser Test Support"),
+                .product(name: "Parser Filter", package: "swift-parser"),
             ]
         ),
         .testTarget(
@@ -218,15 +243,6 @@ let package = Package(
                 .target(name: "Input Parser First"),
                 .target(name: "Input Parser Test Support"),
                 .product(name: "Parser Map", package: "swift-parser"),
-            ]
-        ),
-        .testTarget(
-            name: "Input Parser Take Tests",
-            dependencies: [
-                .target(name: "Input Parser First"),
-                .target(name: "Input Parser Test Support"),
-                .product(name: "Parser Match", package: "swift-parser"),
-                .product(name: "Parser Take", package: "swift-parser"),
             ]
         ),
         .testTarget(

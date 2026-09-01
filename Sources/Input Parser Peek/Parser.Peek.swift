@@ -1,3 +1,4 @@
+public import Input_Namespace
 public import Input_Protocol
 
 extension Parser {
@@ -14,7 +15,8 @@ extension Parser {
     }
 }
 
-extension Parser.Peek: Parser.`Protocol` {
+extension Parser.Peek: Parser.`Protocol`
+where Upstream.Output: Escapable {
 
     public typealias Input = Upstream.Input
 
@@ -36,7 +38,7 @@ extension Parser.Peek: Parser.`Protocol` {
     }
 }
 
-extension Parser.`Protocol` where Input: Input.`Protocol` {
+extension Parser.`Protocol` where Input: Input_Namespace::Input.`Protocol` {
 
     @inlinable
     public func peek() -> Parser.Peek<Self> {

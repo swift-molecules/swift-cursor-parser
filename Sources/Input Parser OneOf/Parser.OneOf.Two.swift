@@ -22,7 +22,8 @@ extension Parser.OneOf {
     }
 }
 
-extension Parser.OneOf.Two: Parser.`Protocol` {
+extension Parser.OneOf.Two: Parser.`Protocol`
+where P0.Output: Escapable {
 
     public typealias Input = P0.Input
 

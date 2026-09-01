@@ -16,8 +16,8 @@ extension Parser.Many {
         @inlinable
         public init(
             _ range: PartialRangeFrom<Int>,
-            @Parser.Take.Builder<Source> element: () -> Element,
-            @Parser.Take.Builder<Source> separator: () -> Separator
+            @Parser.Builder<Source> element: () -> Element,
+            @Parser.Builder<Source> separator: () -> Separator
         ) {
             self.element = element()
             self.separator = separator()
@@ -28,8 +28,8 @@ extension Parser.Many {
         @inlinable
         public init(
             _ range: ClosedRange<Int>,
-            @Parser.Take.Builder<Source> element: () -> Element,
-            @Parser.Take.Builder<Source> separator: () -> Separator
+            @Parser.Builder<Source> element: () -> Element,
+            @Parser.Builder<Source> separator: () -> Separator
         ) {
             self.element = element()
             self.separator = separator()
@@ -39,8 +39,8 @@ extension Parser.Many {
 
         @inlinable
         public init(
-            @Parser.Take.Builder<Source> element: () -> Element,
-            @Parser.Take.Builder<Source> separator: () -> Separator
+            @Parser.Builder<Source> element: () -> Element,
+            @Parser.Builder<Source> separator: () -> Separator
         ) {
             self.element = element()
             self.separator = separator()
@@ -50,7 +50,8 @@ extension Parser.Many {
     }
 }
 
-extension Parser.Many.Separated: Parser.`Protocol` {
+extension Parser.Many.Separated: Parser.`Protocol`
+where Element.Output: Copyable & Escapable {
 
     public typealias Input = Source
 

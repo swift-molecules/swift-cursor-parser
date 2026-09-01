@@ -1,5 +1,14 @@
+public import Cardinal
+public import Cardinal_Carrier
+public import Cardinal_Tagged
 public import Index
 public import Input_Protocol
+public import Input_Stream
+public import Ordinal
+public import Ordinal_Cardinal
+public import Ordinal_Protocol
+public import Ordinal_Tagged
+public import Tagged
 
 extension Input {
 
@@ -117,7 +126,7 @@ extension Input.Tracked {
     public mutating func parseTracked<P: Parser.`Protocol`>(
         _ parser: P
     ) throws(Parser.Error.Located<P.Failure>) -> (output: P.Output, start: Index::Index<Element>)
-    where P.Input == Base {
+    where P.Input == Base, P.Output: Copyable & Escapable {
         let start = currentOffset
         let countBefore = base.count
         let value: P.Output

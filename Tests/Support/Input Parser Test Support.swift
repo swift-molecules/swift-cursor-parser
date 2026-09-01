@@ -1,4 +1,5 @@
 public import Collection_Test_Support
+public import Input_Namespace
 public import Input_Slice
 public import Parser
 
@@ -9,7 +10,7 @@ extension Parser {
 
 extension Parser.Test {
 
-    public typealias Input = Input.Slice<Collection.Fixture.Source<UInt8>>
+    public typealias Input = Input_Namespace::Input.Slice<Collection.Fixture.Source<UInt8>>
 }
 
 extension Input.Slice: @retroactive ExpressibleByArrayLiteral

@@ -14,7 +14,7 @@ extension Parser {
         @inlinable
         public init(
             _ range: PartialRangeFrom<Int>,
-            @Parser.Take.Builder<Source> element: () -> Element
+            @Parser.Builder<Source> element: () -> Element
         ) {
             self.element = element()
             self.minimum = range.lowerBound
@@ -24,7 +24,7 @@ extension Parser {
         @inlinable
         public init(
             _ range: ClosedRange<Int>,
-            @Parser.Take.Builder<Source> element: () -> Element
+            @Parser.Builder<Source> element: () -> Element
         ) {
             self.element = element()
             self.minimum = range.lowerBound
@@ -33,7 +33,7 @@ extension Parser {
 
         @inlinable
         public init(
-            @Parser.Take.Builder<Source> element: () -> Element
+            @Parser.Builder<Source> element: () -> Element
         ) {
             self.element = element()
             self.minimum = 0
@@ -42,7 +42,8 @@ extension Parser {
     }
 }
 
-extension Parser.Many: Parser.`Protocol` {
+extension Parser.Many: Parser.`Protocol`
+where Element.Output: Copyable & Escapable {
 
     public typealias Input = Source
 
