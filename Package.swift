@@ -19,6 +19,7 @@ let package = Package(
         .library(name: "Cursor Parser Peek", targets: ["Cursor Parser Peek"]),
         .library(name: "Cursor Parser Not", targets: ["Cursor Parser Not"]),
         .library(name: "Cursor Parser Location", targets: ["Cursor Parser Location"]),
+        .library(name: "Cursor Parser Test Support", targets: ["Cursor Parser Test Support"]),
     ],
     dependencies: [
         .package(
