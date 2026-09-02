@@ -80,7 +80,6 @@ let package = Package(
             name: "Cursor Parser First",
             dependencies: [
                 .product(name: "Parser", package: "swift-parser"),
-                .product(name: "Parser Match", package: "swift-parser"),
                 .product(name: "Iterator", package: "swift-iterator"),
                 .product(name: "Iterator Protocol", package: "swift-iterator"),
                 .product(name: "Either", package: "swift-either"),
@@ -255,7 +254,6 @@ let package = Package(
                 .product(name: "Either", package: "swift-either"),
                 .product(name: "Always", package: "swift-always"),
                 .product(name: "Always Parser", package: "swift-always-parser"),
-                .product(name: "Parser Fail", package: "swift-parser"),
                 .product(name: "Parser Filter", package: "swift-parser"),
                 .product(name: "Parser FlatMap", package: "swift-parser"),
                 .product(name: "Parser Map", package: "swift-parser"),

@@ -32,7 +32,7 @@ extension `Parser.First.Where`.`Edge Case` {
         #expect {
             try parser.parse(&input)
         } throws: { error in
-            guard let either = error as? Either<Parser.EndOfInput.Error, Parser.Match.Error> else {
+            guard let either = error as? Either<Parser.EndOfInput.Error, Parser.First.Where<Parser.Test.Input>.Error> else {
                 return false
             }
             return either.left != nil
@@ -49,7 +49,7 @@ extension `Parser.First.Where`.`Edge Case` {
         #expect {
             try parser.parse(&input)
         } throws: { error in
-            guard let either = error as? Either<Parser.EndOfInput.Error, Parser.Match.Error> else {
+            guard let either = error as? Either<Parser.EndOfInput.Error, Parser.First.Where<Parser.Test.Input>.Error> else {
                 return false
             }
             return either.right != nil

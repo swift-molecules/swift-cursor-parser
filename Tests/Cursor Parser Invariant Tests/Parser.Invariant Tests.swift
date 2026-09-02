@@ -8,7 +8,6 @@ import Cursor_Parser_OneOf
 import Cursor_Parser_Optionally
 import Cursor_Parser_Peek
 import Cursor_Parser_Test_Support
-import Parser_Fail
 import Parser_Filter
 import Parser_FlatMap
 import Parser_Map
@@ -37,8 +36,8 @@ extension `Parser.Invariant`.`Input Position` {
 
     @Test
     func `Fail does not advance input`() {
-        let parser = Parser.Fail<Parser.Test.Input, Int, Parser.Match.Error>(
-            .predicateFailed(description: "test")
+        let parser = `Always Throwing Leaf`<Parser.Test.Input, Int>(
+            `Always Throwing Leaf Error`.predicateFailed(description: "test")
         )
         var input = Parser.Test.Input([0x01, 0x02, 0x03])
         let checkpoint = input.checkpoint
@@ -398,5 +397,23 @@ extension `Parser.Invariant`.Boundary {
 
         #expect(result.count == 1000)
         #expect(input.first == 0x42)
+    }
+}
+
+private enum `Always Throwing Leaf Error`: Swift.Error, Equatable {
+    case predicateFailed(description: String)
+}
+
+private struct `Always Throwing Leaf`<Input, Output>: Parser.`Protocol` {
+    let error: `Always Throwing Leaf Error`
+
+    init(_ error: `Always Throwing Leaf Error`) {
+        self.error = error
+    }
+
+    typealias Failure = `Always Throwing Leaf Error`
+
+    func parse(_ input: inout Input) throws(Failure) -> Output {
+        throw error
     }
 }
