@@ -5,7 +5,7 @@ public import Parser
 
 extension Parser.First {
 
-    public struct Where<Source: Iterator.`Protocol`>: Parser.`Protocol`
+    public struct Where<Source: Iterator.`Protocol` & ~Copyable & ~Escapable>: Parser.`Protocol`
     where Source.Element: Copyable & Escapable, Source.Failure == Never {
 
         public typealias Input = Source
@@ -44,7 +44,7 @@ extension Parser.First {
 }
 
 extension Parser.First.Where
-where Source.Element: Copyable & Escapable, Source.Failure == Never {
+where Source: ~Copyable & ~Escapable, Source.Element: Copyable & Escapable, Source.Failure == Never {
 
     public enum Error: Swift.Error, Equatable {
         case predicateFailed(expected: String)

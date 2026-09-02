@@ -1,10 +1,14 @@
 public import Checkpoint
 public import Parser
 
-extension Parser.Many {
+extension Parser.Many where Source: ~Copyable & ~Escapable {
 
     public struct Separated<Separator: Parser.`Protocol`>: Parser.`Protocol`
-    where Separator.Input == Source {
+    where
+        Separator.Input == Source,
+        Separator.Input: ~Copyable & ~Escapable,
+        Separator.Output: ~Copyable & ~Escapable
+    {
 
         public typealias Input = Source
 

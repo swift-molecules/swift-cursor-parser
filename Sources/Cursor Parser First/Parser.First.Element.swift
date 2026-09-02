@@ -4,7 +4,7 @@ public import Parser
 
 extension Parser.First {
 
-    public struct Element<Source: Iterator.`Protocol`>: Parser.`Protocol`
+    public struct Element<Source: Iterator.`Protocol` & ~Copyable & ~Escapable>: Parser.`Protocol`
     where Source.Element: Copyable & Escapable, Source.Failure == Never {
 
         public typealias Input = Source

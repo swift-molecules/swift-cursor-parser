@@ -4,7 +4,10 @@ public import Parser
 extension Parser {
 
     public struct Optionally<Wrapped: Parser.`Protocol`>: Parser.`Protocol`
-    where Wrapped.Input: Restorable, Wrapped.Output: Escapable {
+    where
+        Wrapped.Input: Restorable & ~Copyable & ~Escapable,
+        Wrapped.Output: ~Copyable & Escapable
+    {
 
         public typealias Input = Wrapped.Input
 

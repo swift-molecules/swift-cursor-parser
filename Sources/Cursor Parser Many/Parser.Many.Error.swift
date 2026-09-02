@@ -1,7 +1,7 @@
 public import Parser
-extension Parser.Many {
+extension Parser.Many where Source: ~Copyable & ~Escapable {
 
-    public enum Error: Swift.Error, Sendable, Equatable {
+    public enum Error: Swift.Error, Equatable {
 
         case countTooLow(expected: Int, got: Int)
 

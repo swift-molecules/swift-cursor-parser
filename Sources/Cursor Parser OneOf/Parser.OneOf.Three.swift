@@ -10,8 +10,12 @@ extension Parser.OneOf {
         P1.Input == P2.Input,
         P0.Output == P1.Output,
         P1.Output == P2.Output,
-        P0.Input: Restorable,
-        P0.Output: Escapable
+        P0.Input: Restorable & ~Copyable & ~Escapable,
+        P1.Input: ~Copyable & ~Escapable,
+        P2.Input: ~Copyable & ~Escapable,
+        P0.Output: ~Copyable & Escapable,
+        P1.Output: ~Copyable & Escapable,
+        P2.Output: ~Copyable & Escapable
     {
 
         public typealias Input = P0.Input

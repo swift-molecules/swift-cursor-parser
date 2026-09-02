@@ -6,7 +6,7 @@ public import Text
 
 extension Parser.Error {
 
-    public struct Located<E: Swift.Error>: Swift.Error, Sendable {
+    public struct Located<E: Swift.Error>: Swift.Error {
 
         public let error: E
 

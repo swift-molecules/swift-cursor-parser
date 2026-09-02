@@ -4,7 +4,10 @@ public import Parser
 extension Parser {
 
     public struct Peek<Upstream: Parser.`Protocol`>: Parser.`Protocol`
-    where Upstream.Input: Restorable, Upstream.Output: Escapable {
+    where
+        Upstream.Input: Restorable & ~Copyable & ~Escapable,
+        Upstream.Output: ~Copyable & Escapable
+    {
 
         public typealias Input = Upstream.Input
 
@@ -35,7 +38,8 @@ extension Parser {
     }
 }
 
-extension Parser.`Protocol` where Input: Restorable, Output: Escapable {
+extension Parser.`Protocol`
+where Input: Restorable & ~Copyable & ~Escapable, Output: ~Copyable & Escapable {
 
     @inlinable
     public func peek() -> Parser.Peek<Self> {

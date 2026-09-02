@@ -2,8 +2,17 @@ public import Parser
 
 extension Parser.OneOf {
 
-    public struct Sequence<Input, Output, Body: Parser.`Protocol`>: Parser.`Protocol`
-    where Body.Input == Input, Body.Output == Output {
+    public struct Sequence<
+        Input: ~Copyable & ~Escapable,
+        Output: ~Copyable & Escapable,
+        Body: Parser.`Protocol`
+    >: Parser.`Protocol`
+    where
+        Body.Input == Input,
+        Body.Output == Output,
+        Body.Input: ~Copyable & ~Escapable,
+        Body.Output: ~Copyable & Escapable
+    {
 
         public typealias Failure = Body.Failure
 

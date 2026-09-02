@@ -3,8 +3,13 @@ public import Parser
 
 extension Parser {
 
-    public struct Many<Source: Restorable, Element: Parser.`Protocol`>: Parser.`Protocol`
-    where Element.Input == Source, Source.Checkpoint: Equatable, Element.Output: Copyable & Escapable {
+    public struct Many<Source: Restorable & ~Copyable & ~Escapable, Element: Parser.`Protocol`>: Parser.`Protocol`
+    where
+        Element.Input == Source,
+        Element.Input: ~Copyable & ~Escapable,
+        Source.Checkpoint: Equatable,
+        Element.Output: Copyable & Escapable
+    {
 
         public typealias Input = Source
 
