@@ -1,3 +1,6 @@
+public import Tagged
+public import Parser
+public import Parser_Error
 public import Index
 public import Text
 

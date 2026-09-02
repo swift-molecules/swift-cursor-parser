@@ -1,10 +1,19 @@
+public import Either
 public import Iterator
 public import Iterator_Protocol
+public import Parser
 
 extension Parser.First {
 
-    public struct Where<Source: Iterator.`Protocol`>
+    public struct Where<Source: Iterator.`Protocol`>: Parser.`Protocol`
     where Source.Element: Copyable & Escapable, Source.Failure == Never {
+
+        public typealias Input = Source
+
+        public typealias Output = Source.Element
+
+        public typealias Failure = Either<Parser.EndOfInput.Error, Parser.First.Where<Source>.Error>
+
         @usableFromInline
         let predicate: (Source.Element) -> Bool
 
@@ -19,6 +28,18 @@ extension Parser.First {
             self.predicate = predicate
             self.expected = expected
         }
+
+        @inlinable
+        public borrowing func parse(_ input: inout Source) throws(Failure) -> Output {
+            guard let element = input.next() else {
+                throw .left(.unexpected(expected: expected))
+            }
+
+            guard predicate(element) else {
+                throw .right(.predicateFailed(expected: expected))
+            }
+            return element
+        }
     }
 }
 
@@ -27,26 +48,5 @@ where Source.Element: Copyable & Escapable, Source.Failure == Never {
 
     public enum Error: Swift.Error, Equatable {
         case predicateFailed(expected: String)
-    }
-}
-
-extension Parser.First.Where: Parser.`Protocol` {
-
-    public typealias Input = Source
-
-    public typealias Output = Source.Element
-
-    public typealias Failure = Either<Parser.EndOfInput.Error, Parser.First.Where<Source>.Error>
-
-    @inlinable
-    public func parse(_ input: inout Source) throws(Failure) -> Output {
-        guard let element = input.next() else {
-            throw .left(.unexpected(expected: expected))
-        }
-
-        guard predicate(element) else {
-            throw .right(.predicateFailed(expected: expected))
-        }
-        return element
     }
 }

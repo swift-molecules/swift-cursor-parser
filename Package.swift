@@ -160,6 +160,9 @@ let package = Package(
             dependencies: [
                 .target(name: "Cursor Parser First"),
                 .target(name: "Cursor Parser Test Support"),
+                .product(name: "Parser", package: "swift-parser"),
+                .product(name: "Checkpoint", package: "swift-checkpoint"),
+                .product(name: "Either", package: "swift-either"),
             ]
         ),
         .testTarget(
@@ -168,6 +171,9 @@ let package = Package(
                 .target(name: "Cursor Parser First"),
                 .target(name: "Cursor Parser Many"),
                 .target(name: "Cursor Parser Test Support"),
+                .product(name: "Parser", package: "swift-parser"),
+                .product(name: "Checkpoint", package: "swift-checkpoint"),
+                .product(name: "Either", package: "swift-either"),
                 .product(name: "Always", package: "swift-always"),
                 .product(name: "Always Parser", package: "swift-always-parser"),
             ]
@@ -178,7 +184,9 @@ let package = Package(
                 .target(name: "Cursor Parser First"),
                 .target(name: "Cursor Parser Not"),
                 .target(name: "Cursor Parser Test Support"),
-                .product(name: "Parser Filter", package: "swift-parser"),
+                .product(name: "Parser", package: "swift-parser"),
+                .product(name: "Checkpoint", package: "swift-checkpoint"),
+                .product(name: "Either", package: "swift-either"),
             ]
         ),
         .testTarget(
@@ -187,6 +195,9 @@ let package = Package(
                 .target(name: "Cursor Parser First"),
                 .target(name: "Cursor Parser OneOf"),
                 .target(name: "Cursor Parser Test Support"),
+                .product(name: "Parser", package: "swift-parser"),
+                .product(name: "Checkpoint", package: "swift-checkpoint"),
+                .product(name: "Either", package: "swift-either"),
                 .product(name: "Always", package: "swift-always"),
                 .product(name: "Always Parser", package: "swift-always-parser"),
                 .product(name: "Parser Map", package: "swift-parser"),
@@ -198,6 +209,9 @@ let package = Package(
                 .target(name: "Cursor Parser First"),
                 .target(name: "Cursor Parser Optionally"),
                 .target(name: "Cursor Parser Test Support"),
+                .product(name: "Parser", package: "swift-parser"),
+                .product(name: "Checkpoint", package: "swift-checkpoint"),
+                .product(name: "Either", package: "swift-either"),
             ]
         ),
         .testTarget(
@@ -206,6 +220,9 @@ let package = Package(
                 .target(name: "Cursor Parser First"),
                 .target(name: "Cursor Parser Peek"),
                 .target(name: "Cursor Parser Test Support"),
+                .product(name: "Parser", package: "swift-parser"),
+                .product(name: "Checkpoint", package: "swift-checkpoint"),
+                .product(name: "Either", package: "swift-either"),
             ]
         ),
         .testTarget(
@@ -213,14 +230,9 @@ let package = Package(
             dependencies: [
                 .target(name: "Cursor Parser Location"),
                 .target(name: "Cursor Parser Test Support"),
-            ]
-        ),
-        .testTarget(
-            name: "Cursor Parser Filter Tests",
-            dependencies: [
-                .target(name: "Cursor Parser First"),
-                .target(name: "Cursor Parser Test Support"),
-                .product(name: "Parser Filter", package: "swift-parser"),
+                .product(name: "Parser", package: "swift-parser"),
+                .product(name: "Checkpoint", package: "swift-checkpoint"),
+                .product(name: "Either", package: "swift-either"),
             ]
         ),
         .testTarget(
@@ -228,6 +240,9 @@ let package = Package(
             dependencies: [
                 .target(name: "Cursor Parser First"),
                 .target(name: "Cursor Parser Test Support"),
+                .product(name: "Parser", package: "swift-parser"),
+                .product(name: "Checkpoint", package: "swift-checkpoint"),
+                .product(name: "Either", package: "swift-either"),
                 .product(name: "Always", package: "swift-always"),
                 .product(name: "Always Parser", package: "swift-always-parser"),
                 .product(name: "Parser FlatMap", package: "swift-parser"),
@@ -238,6 +253,9 @@ let package = Package(
             dependencies: [
                 .target(name: "Cursor Parser First"),
                 .target(name: "Cursor Parser Test Support"),
+                .product(name: "Parser", package: "swift-parser"),
+                .product(name: "Checkpoint", package: "swift-checkpoint"),
+                .product(name: "Either", package: "swift-either"),
                 .product(name: "Parser Map", package: "swift-parser"),
             ]
         ),
@@ -251,10 +269,12 @@ let package = Package(
                 .target(name: "Cursor Parser Optionally"),
                 .target(name: "Cursor Parser Peek"),
                 .target(name: "Cursor Parser Test Support"),
+                .product(name: "Parser", package: "swift-parser"),
+                .product(name: "Checkpoint", package: "swift-checkpoint"),
+                .product(name: "Either", package: "swift-either"),
                 .product(name: "Either", package: "swift-either"),
                 .product(name: "Always", package: "swift-always"),
                 .product(name: "Always Parser", package: "swift-always-parser"),
-                .product(name: "Parser Filter", package: "swift-parser"),
                 .product(name: "Parser FlatMap", package: "swift-parser"),
                 .product(name: "Parser Map", package: "swift-parser"),
             ]

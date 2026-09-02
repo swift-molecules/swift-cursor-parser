@@ -1,3 +1,5 @@
+import Parser
+import Checkpoint
 import Always
 import Always_Parser
 import Either
@@ -8,7 +10,6 @@ import Cursor_Parser_OneOf
 import Cursor_Parser_Optionally
 import Cursor_Parser_Peek
 import Cursor_Parser_Test_Support
-import Parser_Filter
 import Parser_FlatMap
 import Parser_Map
 import Testing
@@ -270,28 +271,6 @@ extension `Parser.Invariant`.`Error Propagation` {
 
         #expect(throws: (any Swift.Error).self) {
             try parser.parse(&input)
-        }
-    }
-
-    @Test
-    func `Filter wraps predicate failure in right`() {
-        let parser = Parser.First.Element<Parser.Test.Input>()
-            .filter { $0 == 0x00 }
-        var input = Parser.Test.Input([0xFF])
-
-        #expect {
-            try parser.parse(&input)
-        } throws: { error in
-            guard
-                let either = error
-                    as? Either<
-                        Parser.EndOfInput.Error,
-                        Parser.Filter<
-                            Parser.First.Element<Parser.Test.Input>
-                        >.Error
-                    >
-            else { return false }
-            return either.right != nil
         }
     }
 }

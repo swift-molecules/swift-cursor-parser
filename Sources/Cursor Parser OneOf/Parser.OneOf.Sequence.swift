@@ -1,7 +1,11 @@
+public import Parser
+
 extension Parser.OneOf {
 
-    public struct Sequence<Input, Output, Body: Parser.`Protocol`>
+    public struct Sequence<Input, Output, Body: Parser.`Protocol`>: Parser.`Protocol`
     where Body.Input == Input, Body.Output == Output {
+
+        public typealias Failure = Body.Failure
 
         public let body: Body
 
@@ -11,15 +15,10 @@ extension Parser.OneOf {
         ) {
             self.body = build()
         }
-    }
-}
 
-extension Parser.OneOf.Sequence: Parser.`Protocol` {
-
-    public typealias Failure = Body.Failure
-
-    @inlinable
-    public func parse(_ input: inout Input) throws(Failure) -> Output {
-        try body.parse(&input)
+        @inlinable
+        public borrowing func parse(_ input: inout Input) throws(Failure) -> Output {
+            try body.parse(&input)
+        }
     }
 }

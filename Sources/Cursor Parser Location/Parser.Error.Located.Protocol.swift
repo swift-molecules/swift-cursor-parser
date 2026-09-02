@@ -1,3 +1,5 @@
+public import Parser
+public import Parser_Error
 public import Text
 
 public protocol __ParserErrorLocatedProtocol: Swift.Error {

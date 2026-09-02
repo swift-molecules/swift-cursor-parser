@@ -1,7 +1,8 @@
+import Parser
+import Checkpoint
 import Cursor_Parser_First
 import Cursor_Parser_Not
 import Cursor_Parser_Test_Support
-import Parser_Filter
 import Testing
 
 @Suite
@@ -23,8 +24,7 @@ extension `Parser.Not`.Unit {
 
     @Test
     func `never consumes input on success`() throws(any Swift.Error) {
-        let parser = Parser.First.Element<Parser.Test.Input>()
-            .filter { $0 == 0xFF }
+        let parser = Parser.First.Where<Parser.Test.Input> { $0 == 0xFF }
             .not()
         var input = Parser.Test.Input([0x01, 0x02])
 

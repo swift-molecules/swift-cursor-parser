@@ -1,3 +1,4 @@
+public import Parser
 extension Parser.Many {
 
     public enum Error: Swift.Error, Sendable, Equatable {
