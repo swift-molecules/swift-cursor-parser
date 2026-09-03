@@ -1,6 +1,6 @@
 import Parser
 import Checkpoint
-import Cursor_Parser_First
+import Iterator_Parser
 import Cursor_Parser_Peek
 import Cursor_Parser_Test_Support
 import Testing

@@ -2,7 +2,7 @@ import Parser
 import Checkpoint
 import Always
 import Always_Parser
-import Cursor_Parser_First
+import Iterator_Parser
 import Cursor_Parser_Test_Support
 import Parser_FlatMap
 import Testing

@@ -60,6 +60,30 @@ extension Parser.Many where Source: ~Copyable & ~Escapable {
         }
 
         @inlinable
+        public init(_ range: PartialRangeFrom<Int>, _ element: Element, separator: Separator) {
+            self.element = element
+            self.separator = separator
+            self.minimum = range.lowerBound
+            self.maximum = .max
+        }
+
+        @inlinable
+        public init(_ range: ClosedRange<Int>, _ element: Element, separator: Separator) {
+            self.element = element
+            self.separator = separator
+            self.minimum = range.lowerBound
+            self.maximum = range.upperBound
+        }
+
+        @inlinable
+        public init(_ element: Element, separator: Separator) {
+            self.element = element
+            self.separator = separator
+            self.minimum = 0
+            self.maximum = .max
+        }
+
+        @inlinable
         public borrowing func parse(_ input: inout Source) throws(Failure) -> Output {
             var results: [Element.Output] = []
             if maximum < .max {

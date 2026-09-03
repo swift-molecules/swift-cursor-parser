@@ -53,6 +53,27 @@ extension Parser {
         }
 
         @inlinable
+        public init(_ range: PartialRangeFrom<Int>, _ element: Element) {
+            self.element = element
+            self.minimum = range.lowerBound
+            self.maximum = .max
+        }
+
+        @inlinable
+        public init(_ range: ClosedRange<Int>, _ element: Element) {
+            self.element = element
+            self.minimum = range.lowerBound
+            self.maximum = range.upperBound
+        }
+
+        @inlinable
+        public init(_ element: Element) {
+            self.element = element
+            self.minimum = 0
+            self.maximum = .max
+        }
+
+        @inlinable
         public borrowing func parse(_ input: inout Source) throws(Failure) -> Output {
             var results: [Element.Output] = []
             if maximum < .max {

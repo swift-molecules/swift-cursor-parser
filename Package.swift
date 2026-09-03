@@ -12,13 +12,11 @@ let package = Package(
         .visionOS(.v27),
     ],
     products: [
-        .library(name: "Cursor Parser First", targets: ["Cursor Parser First"]),
         .library(name: "Cursor Parser OneOf", targets: ["Cursor Parser OneOf"]),
         .library(name: "Cursor Parser Optionally", targets: ["Cursor Parser Optionally"]),
         .library(name: "Cursor Parser Many", targets: ["Cursor Parser Many"]),
         .library(name: "Cursor Parser Peek", targets: ["Cursor Parser Peek"]),
         .library(name: "Cursor Parser Not", targets: ["Cursor Parser Not"]),
-        .library(name: "Cursor Parser Location", targets: ["Cursor Parser Location"]),
         .library(name: "Cursor Parser Test Support", targets: ["Cursor Parser Test Support"]),
     ],
     dependencies: [
@@ -43,27 +41,7 @@ let package = Package(
             branch: "main"
         ),
         .package(
-            url: "https://github.com/swift-atoms/swift-index.git",
-            branch: "main"
-        ),
-        .package(
-            url: "https://github.com/swift-atoms/swift-text.git",
-            branch: "main"
-        ),
-        .package(
             url: "https://github.com/swift-atoms/swift-either.git",
-            branch: "main"
-        ),
-        .package(
-            url: "https://github.com/swift-atoms/swift-cardinal.git",
-            branch: "main"
-        ),
-        .package(
-            url: "https://github.com/swift-atoms/swift-ordinal.git",
-            branch: "main"
-        ),
-        .package(
-            url: "https://github.com/swift-atoms/swift-tagged.git",
             branch: "main"
         ),
         .package(
@@ -74,17 +52,12 @@ let package = Package(
             url: "https://github.com/swift-molecules/swift-always-parser.git",
             branch: "main"
         ),
+        .package(
+            url: "https://github.com/swift-molecules/swift-iterator-parser.git",
+            branch: "main"
+        ),
     ],
     targets: [
-        .target(
-            name: "Cursor Parser First",
-            dependencies: [
-                .product(name: "Parser", package: "swift-parser"),
-                .product(name: "Iterator", package: "swift-iterator"),
-                .product(name: "Iterator Protocol", package: "swift-iterator"),
-                .product(name: "Either", package: "swift-either"),
-            ]
-        ),
         .target(
             name: "Cursor Parser OneOf",
             dependencies: [
@@ -122,29 +95,6 @@ let package = Package(
             ]
         ),
         .target(
-            name: "Cursor Parser Location",
-            dependencies: [
-                .product(name: "Parser", package: "swift-parser"),
-                .product(name: "Parser Error", package: "swift-parser"),
-                .product(name: "Checkpoint", package: "swift-checkpoint"),
-                .product(name: "Iterator", package: "swift-iterator"),
-                .product(name: "Iterator Protocol", package: "swift-iterator"),
-                .product(name: "Cursor", package: "swift-cursor"),
-                .product(name: "Cursor Index", package: "swift-cursor"),
-                .product(name: "Cardinal", package: "swift-cardinal"),
-                .product(name: "Cardinal Carrier", package: "swift-cardinal"),
-                .product(name: "Cardinal Tagged", package: "swift-cardinal"),
-                .product(name: "Ordinal", package: "swift-ordinal"),
-                .product(name: "Ordinal Cardinal", package: "swift-ordinal"),
-                .product(name: "Ordinal Protocol", package: "swift-ordinal"),
-                .product(name: "Ordinal Tagged", package: "swift-ordinal"),
-                .product(name: "Tagged", package: "swift-tagged"),
-                .product(name: "Index", package: "swift-index"),
-                .product(name: "Text", package: "swift-text"),
-                .product(name: "Either", package: "swift-either"),
-            ]
-        ),
-        .target(
             name: "Cursor Parser Test Support",
             dependencies: [
                 .product(name: "Parser", package: "swift-parser"),
@@ -156,19 +106,9 @@ let package = Package(
             path: "Tests/Support"
         ),
         .testTarget(
-            name: "Cursor Parser First Tests",
-            dependencies: [
-                .target(name: "Cursor Parser First"),
-                .target(name: "Cursor Parser Test Support"),
-                .product(name: "Parser", package: "swift-parser"),
-                .product(name: "Checkpoint", package: "swift-checkpoint"),
-                .product(name: "Either", package: "swift-either"),
-            ]
-        ),
-        .testTarget(
             name: "Cursor Parser Many Tests",
             dependencies: [
-                .target(name: "Cursor Parser First"),
+                .product(name: "Iterator Parser", package: "swift-iterator-parser"),
                 .target(name: "Cursor Parser Many"),
                 .target(name: "Cursor Parser Test Support"),
                 .product(name: "Parser", package: "swift-parser"),
@@ -181,7 +121,7 @@ let package = Package(
         .testTarget(
             name: "Cursor Parser Not Tests",
             dependencies: [
-                .target(name: "Cursor Parser First"),
+                .product(name: "Iterator Parser", package: "swift-iterator-parser"),
                 .target(name: "Cursor Parser Not"),
                 .target(name: "Cursor Parser Test Support"),
                 .product(name: "Parser", package: "swift-parser"),
@@ -192,7 +132,7 @@ let package = Package(
         .testTarget(
             name: "Cursor Parser OneOf Tests",
             dependencies: [
-                .target(name: "Cursor Parser First"),
+                .product(name: "Iterator Parser", package: "swift-iterator-parser"),
                 .target(name: "Cursor Parser OneOf"),
                 .target(name: "Cursor Parser Test Support"),
                 .product(name: "Parser", package: "swift-parser"),
@@ -206,7 +146,7 @@ let package = Package(
         .testTarget(
             name: "Cursor Parser Optionally Tests",
             dependencies: [
-                .target(name: "Cursor Parser First"),
+                .product(name: "Iterator Parser", package: "swift-iterator-parser"),
                 .target(name: "Cursor Parser Optionally"),
                 .target(name: "Cursor Parser Test Support"),
                 .product(name: "Parser", package: "swift-parser"),
@@ -217,18 +157,8 @@ let package = Package(
         .testTarget(
             name: "Cursor Parser Peek Tests",
             dependencies: [
-                .target(name: "Cursor Parser First"),
+                .product(name: "Iterator Parser", package: "swift-iterator-parser"),
                 .target(name: "Cursor Parser Peek"),
-                .target(name: "Cursor Parser Test Support"),
-                .product(name: "Parser", package: "swift-parser"),
-                .product(name: "Checkpoint", package: "swift-checkpoint"),
-                .product(name: "Either", package: "swift-either"),
-            ]
-        ),
-        .testTarget(
-            name: "Cursor Parser Location Tests",
-            dependencies: [
-                .target(name: "Cursor Parser Location"),
                 .target(name: "Cursor Parser Test Support"),
                 .product(name: "Parser", package: "swift-parser"),
                 .product(name: "Checkpoint", package: "swift-checkpoint"),
@@ -238,7 +168,7 @@ let package = Package(
         .testTarget(
             name: "Cursor Parser FlatMap Tests",
             dependencies: [
-                .target(name: "Cursor Parser First"),
+                .product(name: "Iterator Parser", package: "swift-iterator-parser"),
                 .target(name: "Cursor Parser Test Support"),
                 .product(name: "Parser", package: "swift-parser"),
                 .product(name: "Checkpoint", package: "swift-checkpoint"),
@@ -251,7 +181,7 @@ let package = Package(
         .testTarget(
             name: "Cursor Parser Map Tests",
             dependencies: [
-                .target(name: "Cursor Parser First"),
+                .product(name: "Iterator Parser", package: "swift-iterator-parser"),
                 .target(name: "Cursor Parser Test Support"),
                 .product(name: "Parser", package: "swift-parser"),
                 .product(name: "Checkpoint", package: "swift-checkpoint"),
@@ -262,7 +192,7 @@ let package = Package(
         .testTarget(
             name: "Cursor Parser Invariant Tests",
             dependencies: [
-                .target(name: "Cursor Parser First"),
+                .product(name: "Iterator Parser", package: "swift-iterator-parser"),
                 .target(name: "Cursor Parser Many"),
                 .target(name: "Cursor Parser Not"),
                 .target(name: "Cursor Parser OneOf"),

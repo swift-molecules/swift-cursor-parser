@@ -3,7 +3,7 @@ import Checkpoint
 import Always
 import Always_Parser
 import Either
-import Cursor_Parser_First
+import Iterator_Parser
 import Cursor_Parser_Many
 import Cursor_Parser_Not
 import Cursor_Parser_OneOf
@@ -106,7 +106,7 @@ extension `Parser.Invariant`.`Input Position` {
         let parser = Parser.Test.TakeWhile { $0 < 0x05 }
         var input = Parser.Test.Input([0x01, 0x02, 0x03, 0x04, 0x05, 0x06])
 
-        let result = try parser.parse(&input)
+        let result = parser.parse(&input)
 
         #expect(result.count == 4)
         #expect(input.first == 0x05)
@@ -130,7 +130,7 @@ extension `Parser.Invariant`.`Input Position` {
         )
         var input = Parser.Test.Input([0x42, 0x43])
 
-        try parser.parse(&input)
+        _ = try parser.parse(&input)
 
         #expect(input.first == 0x43)
     }
@@ -372,7 +372,7 @@ extension `Parser.Invariant`.Boundary {
         let parser = Parser.Test.TakeWhile { $0 == 0x41 }
         var input = Parser.Test.Input(bytes)
 
-        let result = try parser.parse(&input)
+        let result = parser.parse(&input)
 
         #expect(result.count == 1000)
         #expect(input.first == 0x42)

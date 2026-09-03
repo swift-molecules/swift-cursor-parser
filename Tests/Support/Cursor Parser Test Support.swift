@@ -30,7 +30,7 @@ extension Parser.Test {
     }
 }
 
-extension Parser.Test.Input: Cursor.Positioned {
+extension Parser.Test.Input: Cursor.`Protocol` {
 
     public typealias Element = UInt8
 
@@ -51,11 +51,6 @@ extension Parser.Test.Input: Cursor.Positioned {
     @inlinable
     public mutating func seek(to checkpoint: Int) {
         position = checkpoint
-    }
-
-    @inlinable
-    public var bounds: ClosedRange<Int> {
-        0...bytes.count
     }
 }
 
