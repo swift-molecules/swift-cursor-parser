@@ -3,6 +3,7 @@ import Checkpoint
 import Iterator_Parser
 import Cursor_Parser_Peek
 import Cursor_Parser_Test_Support
+import Cursor_Standard_Library_Integration
 import Testing
 
 @Suite
@@ -14,8 +15,8 @@ struct `Parser.Peek` {
 extension `Parser.Peek`.Unit {
     @Test
     func `returns output without consuming input`() throws(any Swift.Error) {
-        let parser = Parser.First.Element<Parser.Test.Input>().peek()
-        var input = Parser.Test.Input([0x41, 0x42])
+        let parser = Parser.First.Element<ArraySlice<UInt8>>().peek()
+        var input = ArraySlice<UInt8>([0x41, 0x42])
 
         let result = try parser.parse(&input)
 
@@ -25,8 +26,8 @@ extension `Parser.Peek`.Unit {
 
     @Test
     func `repeated peeks return same value`() throws(any Swift.Error) {
-        let parser = Parser.First.Element<Parser.Test.Input>().peek()
-        var input = Parser.Test.Input([0xFF])
+        let parser = Parser.First.Element<ArraySlice<UInt8>>().peek()
+        var input = ArraySlice<UInt8>([0xFF])
 
         let first = try parser.parse(&input)
         let second = try parser.parse(&input)
@@ -39,8 +40,8 @@ extension `Parser.Peek`.Unit {
 extension `Parser.Peek`.`Edge Case` {
     @Test
     func `upstream failure does not consume input`() {
-        let parser = Parser.First.Where<Parser.Test.Input> { $0 == 0x41 }.peek()
-        var input = Parser.Test.Input([0x42])
+        let parser = Parser.First.Where<ArraySlice<UInt8>> { $0 == 0x41 }.peek()
+        var input = ArraySlice<UInt8>([0x42])
 
         #expect(throws: (any Swift.Error).self) {
             try parser.parse(&input)
@@ -50,8 +51,8 @@ extension `Parser.Peek`.`Edge Case` {
 
     @Test
     func `empty input propagates upstream error`() {
-        let parser = Parser.First.Element<Parser.Test.Input>().peek()
-        var input = Parser.Test.Input([])
+        let parser = Parser.First.Element<ArraySlice<UInt8>>().peek()
+        var input = ArraySlice<UInt8>([])
 
         #expect(throws: Parser.EndOfInput.Error.self) {
             try parser.parse(&input)

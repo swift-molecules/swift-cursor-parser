@@ -3,6 +3,7 @@ import Checkpoint
 import Iterator_Parser
 import Cursor_Parser_Many
 import Cursor_Parser_Test_Support
+import Cursor_Standard_Library_Integration
 import Testing
 
 @Suite
@@ -15,11 +16,11 @@ extension `Parser.Many.Separated`.Unit {
     @Test
     func `parses comma-separated bytes`() throws(any Swift.Error) {
         let parser = Parser.Many.Separated {
-            Parser.First.Element<Parser.Test.Input>()
+            Parser.First.Element<ArraySlice<UInt8>>()
         } separator: {
-            Parser.First.Where<Parser.Test.Input> { $0 == UInt8(ascii: ",") }
+            Parser.First.Where<ArraySlice<UInt8>> { $0 == UInt8(ascii: ",") }
         }
-        var input = Parser.Test.Input(utf8: "a,b,c")
+        var input = Array("a,b,c".utf8)[...]
 
         let result = try parser.parse(&input)
 
@@ -32,11 +33,11 @@ extension `Parser.Many.Separated`.Unit {
     @Test
     func `single element without separator`() throws(any Swift.Error) {
         let parser = Parser.Many.Separated {
-            Parser.First.Element<Parser.Test.Input>()
+            Parser.First.Element<ArraySlice<UInt8>>()
         } separator: {
-            Parser.First.Where<Parser.Test.Input> { $0 == UInt8(ascii: ",") }
+            Parser.First.Where<ArraySlice<UInt8>> { $0 == UInt8(ascii: ",") }
         }
-        var input = Parser.Test.Input([0x42])
+        var input = ArraySlice<UInt8>([0x42])
 
         let result = try parser.parse(&input)
 
@@ -48,11 +49,11 @@ extension `Parser.Many.Separated`.`Edge Case` {
     @Test
     func `empty input returns empty array`() throws(any Swift.Error) {
         let parser = Parser.Many.Separated {
-            Parser.First.Where<Parser.Test.Input> { $0 == 0x41 }
+            Parser.First.Where<ArraySlice<UInt8>> { $0 == 0x41 }
         } separator: {
-            Parser.First.Where<Parser.Test.Input> { $0 == UInt8(ascii: ",") }
+            Parser.First.Where<ArraySlice<UInt8>> { $0 == UInt8(ascii: ",") }
         }
-        var input = Parser.Test.Input([])
+        var input = ArraySlice<UInt8>([])
 
         let result = try parser.parse(&input)
 
@@ -62,11 +63,11 @@ extension `Parser.Many.Separated`.`Edge Case` {
     @Test
     func `trailing separator not consumed`() throws(any Swift.Error) {
         let parser = Parser.Many.Separated {
-            Parser.First.Where<Parser.Test.Input> { $0 == UInt8(ascii: "x") }
+            Parser.First.Where<ArraySlice<UInt8>> { $0 == UInt8(ascii: "x") }
         } separator: {
-            Parser.First.Where<Parser.Test.Input> { $0 == UInt8(ascii: ",") }
+            Parser.First.Where<ArraySlice<UInt8>> { $0 == UInt8(ascii: ",") }
         }
-        var input = Parser.Test.Input(utf8: "x,x,")
+        var input = Array("x,x,".utf8)[...]
 
         let result = try parser.parse(&input)
 
@@ -77,14 +78,15 @@ extension `Parser.Many.Separated`.`Edge Case` {
     @Test
     func `minimum count enforcement`() {
         let parser = Parser.Many.Separated(3...) {
-            Parser.First.Where<Parser.Test.Input> { $0 == UInt8(ascii: "a") }
+            Parser.First.Where<ArraySlice<UInt8>> { $0 == UInt8(ascii: "a") }
         } separator: {
-            Parser.First.Where<Parser.Test.Input> { $0 == UInt8(ascii: ",") }
+            Parser.First.Where<ArraySlice<UInt8>> { $0 == UInt8(ascii: ",") }
         }
-        var input = Parser.Test.Input(utf8: "a,a")
+        var input = Array("a,a".utf8)[...]
 
         #expect(
-            throws: Parser.Many<Parser.Test.Input, Parser.First.Where<Parser.Test.Input>>.Error.self
+            throws: Parser.Many<ArraySlice<UInt8>, Parser.First.Where<ArraySlice<UInt8>>>
+                .Separated<Parser.First.Where<ArraySlice<UInt8>>>.Error.self
         ) {
             try parser.parse(&input)
         }

@@ -1,81 +1,10 @@
-import Checkpoint
-public import Cursor
-import Iterator
-import Iterator_Protocol
+public import Cursor_Standard_Library_Integration
 public import Parser
 
 extension Parser {
 
     public enum Test {}
 }
-
-extension Parser.Test {
-
-    public struct Input {
-
-        public var bytes: [UInt8]
-
-        public var position: Int
-
-        @inlinable
-        public init(_ bytes: [UInt8]) {
-            self.bytes = bytes
-            self.position = 0
-        }
-
-        @inlinable
-        public init(utf8 string: Swift.String) {
-            self.init([UInt8](string.utf8))
-        }
-    }
-}
-
-extension Parser.Test.Input: Cursor.`Protocol` {
-
-    public typealias Element = UInt8
-
-    public typealias Failure = Never
-
-    @inlinable
-    public mutating func next() -> UInt8? {
-        guard position < bytes.count else { return nil }
-        defer { position += 1 }
-        return bytes[position]
-    }
-
-    @inlinable
-    public var checkpoint: Int {
-        position
-    }
-
-    @inlinable
-    public mutating func seek(to checkpoint: Int) {
-        position = checkpoint
-    }
-}
-
-extension Parser.Test.Input {
-
-    @inlinable
-    public var first: UInt8? {
-        position < bytes.count ? bytes[position] : nil
-    }
-
-    @inlinable
-    public var isEmpty: Bool {
-        position >= bytes.count
-    }
-}
-
-extension Parser.Test.Input: ExpressibleByArrayLiteral {
-
-    @inlinable
-    public init(arrayLiteral elements: UInt8...) {
-        self.init(elements)
-    }
-}
-
-extension Parser.Test.Input: Equatable, Sendable {}
 
 extension Parser.Test {
 
@@ -100,7 +29,7 @@ extension Parser.Test.Take {
 
 extension Parser.Test.Take: Parser.`Protocol` {
 
-    public typealias Input = Parser.Test.Input
+    public typealias Input = ArraySlice<UInt8>
 
     public typealias Output = [UInt8]
 
@@ -136,7 +65,7 @@ extension Parser.Test {
 
 extension Parser.Test.TakeWhile: Parser.`Protocol` {
 
-    public typealias Input = Parser.Test.Input
+    public typealias Input = ArraySlice<UInt8>
 
     public typealias Output = [UInt8]
 
@@ -146,7 +75,7 @@ extension Parser.Test.TakeWhile: Parser.`Protocol` {
     public func parse(_ input: inout Input) -> [UInt8] {
         var result: [UInt8] = []
         while let element = input.first, predicate(element) {
-            _ = input.next()
+            _ = input.popFirst()
             result.append(element)
         }
         return result
@@ -164,7 +93,7 @@ extension Parser.Test {
 
 extension Parser.Test.Rest: Parser.`Protocol` {
 
-    public typealias Input = Parser.Test.Input
+    public typealias Input = ArraySlice<UInt8>
 
     public typealias Output = [UInt8]
 
@@ -199,7 +128,7 @@ extension Parser.Test.End {
 
 extension Parser.Test.End: Parser.`Protocol` {
 
-    public typealias Input = Parser.Test.Input
+    public typealias Input = ArraySlice<UInt8>
 
     public typealias Output = Void
 

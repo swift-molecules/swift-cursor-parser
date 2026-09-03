@@ -4,6 +4,7 @@ import Iterator_Parser
 import Cursor_Parser_OneOf
 import Cursor_Parser_Test_Support
 import Parser_Map
+import Cursor_Standard_Library_Integration
 import Testing
 
 @Suite
@@ -16,10 +17,10 @@ extension `Parser.OneOf.Two`.Unit {
     @Test
     func `returns first parser result when it succeeds`() throws(any Swift.Error) {
         let parser = Parser.OneOf.Two(
-            Parser.First.Where<Parser.Test.Input> { $0 == 0x41 }.map { _ in "A" },
-            Parser.First.Where<Parser.Test.Input> { $0 == 0x42 }.map { _ in "B" }
+            Parser.First.Where<ArraySlice<UInt8>> { $0 == 0x41 }.map { _ in "A" },
+            Parser.First.Where<ArraySlice<UInt8>> { $0 == 0x42 }.map { _ in "B" }
         )
-        var input = Parser.Test.Input([0x41])
+        var input = ArraySlice<UInt8>([0x41])
 
         let result = try parser.parse(&input)
 
@@ -29,10 +30,10 @@ extension `Parser.OneOf.Two`.Unit {
     @Test
     func `falls back to second parser when first fails`() throws(any Swift.Error) {
         let parser = Parser.OneOf.Two(
-            Parser.First.Where<Parser.Test.Input> { $0 == 0x41 }.map { _ in "A" },
-            Parser.First.Where<Parser.Test.Input> { $0 == 0x42 }.map { _ in "B" }
+            Parser.First.Where<ArraySlice<UInt8>> { $0 == 0x41 }.map { _ in "A" },
+            Parser.First.Where<ArraySlice<UInt8>> { $0 == 0x42 }.map { _ in "B" }
         )
-        var input = Parser.Test.Input([0x42])
+        var input = ArraySlice<UInt8>([0x42])
 
         let result = try parser.parse(&input)
 
@@ -44,10 +45,10 @@ extension `Parser.OneOf.Two`.`Edge Case` {
     @Test
     func `fails when both alternatives fail`() {
         let parser = Parser.OneOf.Two(
-            Parser.First.Where<Parser.Test.Input> { $0 == 0x41 },
-            Parser.First.Where<Parser.Test.Input> { $0 == 0x42 }
+            Parser.First.Where<ArraySlice<UInt8>> { $0 == 0x41 },
+            Parser.First.Where<ArraySlice<UInt8>> { $0 == 0x42 }
         )
-        var input = Parser.Test.Input([0x43])
+        var input = ArraySlice<UInt8>([0x43])
 
         #expect(throws: (any Swift.Error).self) {
             try parser.parse(&input)
@@ -57,10 +58,10 @@ extension `Parser.OneOf.Two`.`Edge Case` {
     @Test
     func `backtracks first attempt before trying second`() throws(any Swift.Error) {
         let parser = Parser.OneOf.Two(
-            Parser.First.Where<Parser.Test.Input> { $0 == 0xFF }.map { _ in "first" },
-            Parser.First.Element<Parser.Test.Input>().map { _ in "second" }
+            Parser.First.Where<ArraySlice<UInt8>> { $0 == 0xFF }.map { _ in "first" },
+            Parser.First.Element<ArraySlice<UInt8>>().map { _ in "second" }
         )
-        var input = Parser.Test.Input([0x42])
+        var input = ArraySlice<UInt8>([0x42])
 
         let result = try parser.parse(&input)
 

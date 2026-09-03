@@ -5,6 +5,7 @@ import Always_Parser
 import Cursor_Parser_OneOf
 import Cursor_Parser_Test_Support
 import Parser_Map
+import Cursor_Standard_Library_Integration
 import Testing
 
 private enum Choice: Equatable {
@@ -24,11 +25,11 @@ extension `Parser.OneOf.Sequence`.`Builder Propagation` {
         .Error)
     {
         let alternation = Parser.OneOf.Sequence {
-            Always<Void>.Parser<Parser.Test.Input>(()).map { _ in Choice.a }
-            Always<Void>.Parser<Parser.Test.Input>(()).map { _ in Choice.b }
+            Always<Void>.Parser<ArraySlice<UInt8>>(()).map { _ in Choice.a }
+            Always<Void>.Parser<ArraySlice<UInt8>>(()).map { _ in Choice.b }
         }
 
-        var input: Parser.Test.Input = [0x41]
+        var input: ArraySlice<UInt8> = [0x41]
         #expect(try alternation.parse(&input) == .a)
     }
 }

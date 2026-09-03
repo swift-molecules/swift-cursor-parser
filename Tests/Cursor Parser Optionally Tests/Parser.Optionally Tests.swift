@@ -3,6 +3,7 @@ import Checkpoint
 import Iterator_Parser
 import Cursor_Parser_Optionally
 import Cursor_Parser_Test_Support
+import Cursor_Standard_Library_Integration
 import Testing
 
 @Suite
@@ -14,10 +15,10 @@ struct `Parser.Optionally` {
 extension `Parser.Optionally`.Unit {
     @Test
     func `returns value when parser succeeds`() {
-        let parser = Parser.Optionally<Parser.First.Where<Parser.Test.Input>> {
-            Parser.First.Where<Parser.Test.Input> { $0 == 0x41 }
+        let parser = Parser.Optionally<Parser.First.Where<ArraySlice<UInt8>>> {
+            Parser.First.Where<ArraySlice<UInt8>> { $0 == 0x41 }
         }
-        var input = Parser.Test.Input([0x41, 0x42])
+        var input = ArraySlice<UInt8>([0x41, 0x42])
 
         let result = parser.parse(&input)
 
@@ -27,10 +28,10 @@ extension `Parser.Optionally`.Unit {
 
     @Test
     func `returns nil when parser fails`() {
-        let parser = Parser.Optionally<Parser.First.Where<Parser.Test.Input>> {
-            Parser.First.Where<Parser.Test.Input> { $0 == 0x41 }
+        let parser = Parser.Optionally<Parser.First.Where<ArraySlice<UInt8>>> {
+            Parser.First.Where<ArraySlice<UInt8>> { $0 == 0x41 }
         }
-        var input = Parser.Test.Input([0x42])
+        var input = ArraySlice<UInt8>([0x42])
 
         let result = parser.parse(&input)
 
@@ -41,10 +42,10 @@ extension `Parser.Optionally`.Unit {
 extension `Parser.Optionally`.`Edge Case` {
     @Test
     func `backtracks on failure`() {
-        let parser = Parser.Optionally<Parser.First.Where<Parser.Test.Input>> {
-            Parser.First.Where<Parser.Test.Input> { $0 == 0xFF }
+        let parser = Parser.Optionally<Parser.First.Where<ArraySlice<UInt8>>> {
+            Parser.First.Where<ArraySlice<UInt8>> { $0 == 0xFF }
         }
-        var input = Parser.Test.Input([0x01, 0x02])
+        var input = ArraySlice<UInt8>([0x01, 0x02])
 
         _ = parser.parse(&input)
 
@@ -53,10 +54,10 @@ extension `Parser.Optionally`.`Edge Case` {
 
     @Test
     func `returns nil on empty input`() {
-        let parser = Parser.Optionally<Parser.First.Element<Parser.Test.Input>> {
-            Parser.First.Element<Parser.Test.Input>()
+        let parser = Parser.Optionally<Parser.First.Element<ArraySlice<UInt8>>> {
+            Parser.First.Element<ArraySlice<UInt8>>()
         }
-        var input = Parser.Test.Input([])
+        var input = ArraySlice<UInt8>([])
 
         let result = parser.parse(&input)
 

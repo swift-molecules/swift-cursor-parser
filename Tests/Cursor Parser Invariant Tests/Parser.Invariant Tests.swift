@@ -12,6 +12,7 @@ import Cursor_Parser_Peek
 import Cursor_Parser_Test_Support
 import Parser_FlatMap
 import Parser_Map
+import Cursor_Standard_Library_Integration
 import Testing
 
 @Suite
@@ -26,8 +27,8 @@ struct `Parser.Invariant` {
 extension `Parser.Invariant`.`Input Position` {
     @Test
     func `Always does not advance input`() {
-        let parser = Always<Int>.Parser<Parser.Test.Input>(99)
-        var input = Parser.Test.Input([0x01, 0x02, 0x03])
+        let parser = Always<Int>.Parser<ArraySlice<UInt8>>(99)
+        var input = ArraySlice<UInt8>([0x01, 0x02, 0x03])
         let checkpoint = input.checkpoint
 
         _ = parser.parse(&input)
@@ -37,10 +38,10 @@ extension `Parser.Invariant`.`Input Position` {
 
     @Test
     func `Fail does not advance input`() {
-        let parser = `Always Throwing Leaf`<Parser.Test.Input, Int>(
+        let parser = `Always Throwing Leaf`<ArraySlice<UInt8>, Int>(
             `Always Throwing Leaf Error`.predicateFailed(description: "test")
         )
-        var input = Parser.Test.Input([0x01, 0x02, 0x03])
+        var input = ArraySlice<UInt8>([0x01, 0x02, 0x03])
         let checkpoint = input.checkpoint
 
         _ = try? parser.parse(&input)
@@ -50,8 +51,8 @@ extension `Parser.Invariant`.`Input Position` {
 
     @Test
     func `Peek does not advance input on success`() throws(any Swift.Error) {
-        let parser = Parser.First.Element<Parser.Test.Input>().peek()
-        var input = Parser.Test.Input([0x41, 0x42])
+        let parser = Parser.First.Element<ArraySlice<UInt8>>().peek()
+        var input = ArraySlice<UInt8>([0x41, 0x42])
         let checkpoint = input.checkpoint
 
         _ = try parser.parse(&input)
@@ -61,8 +62,8 @@ extension `Parser.Invariant`.`Input Position` {
 
     @Test
     func `Not does not advance input on success`() throws(any Swift.Error) {
-        let parser = Parser.First.Where<Parser.Test.Input> { $0 == 0xFF }.not()
-        var input = Parser.Test.Input([0x01, 0x02])
+        let parser = Parser.First.Where<ArraySlice<UInt8>> { $0 == 0xFF }.not()
+        var input = ArraySlice<UInt8>([0x01, 0x02])
         let checkpoint = input.checkpoint
 
         try parser.parse(&input)
@@ -73,7 +74,7 @@ extension `Parser.Invariant`.`Input Position` {
     @Test
     func `End does not advance input`() throws(any Swift.Error) {
         let parser = Parser.Test.End()
-        var input = Parser.Test.Input([])
+        var input = ArraySlice<UInt8>([])
         let checkpoint = input.checkpoint
 
         try parser.parse(&input)
@@ -83,8 +84,8 @@ extension `Parser.Invariant`.`Input Position` {
 
     @Test
     func `First.Element advances exactly one position`() throws(any Swift.Error) {
-        let parser = Parser.First.Element<Parser.Test.Input>()
-        var input = Parser.Test.Input([0x0A, 0x0B, 0x0C])
+        let parser = Parser.First.Element<ArraySlice<UInt8>>()
+        var input = ArraySlice<UInt8>([0x0A, 0x0B, 0x0C])
 
         _ = try parser.parse(&input)
 
@@ -94,7 +95,7 @@ extension `Parser.Invariant`.`Input Position` {
     @Test
     func `Test.Take advances by count`() throws(any Swift.Error) {
         let parser = Parser.Test.Take(4)
-        var input = Parser.Test.Input([0x0A, 0x0B, 0x0C, 0x0D, 0x0E])
+        var input = ArraySlice<UInt8>([0x0A, 0x0B, 0x0C, 0x0D, 0x0E])
 
         _ = try parser.parse(&input)
 
@@ -104,7 +105,7 @@ extension `Parser.Invariant`.`Input Position` {
     @Test
     func `Test.TakeWhile advances by matched prefix length`() throws(any Swift.Error) {
         let parser = Parser.Test.TakeWhile { $0 < 0x05 }
-        var input = Parser.Test.Input([0x01, 0x02, 0x03, 0x04, 0x05, 0x06])
+        var input = ArraySlice<UInt8>([0x01, 0x02, 0x03, 0x04, 0x05, 0x06])
 
         let result = parser.parse(&input)
 
@@ -115,7 +116,7 @@ extension `Parser.Invariant`.`Input Position` {
     @Test
     func `Rest advances to end`() {
         let parser = Parser.Test.Rest()
-        var input = Parser.Test.Input([0x01, 0x02, 0x03])
+        var input = ArraySlice<UInt8>([0x01, 0x02, 0x03])
 
         _ = parser.parse(&input)
 
@@ -125,10 +126,10 @@ extension `Parser.Invariant`.`Input Position` {
     @Test
     func `OneOf restores position on failed first branch`() throws(any Swift.Error) {
         let parser = Parser.OneOf.Two(
-            Parser.First.Where<Parser.Test.Input> { $0 == 0xFF },
-            Parser.First.Where<Parser.Test.Input> { $0 == 0x42 }
+            Parser.First.Where<ArraySlice<UInt8>> { $0 == 0xFF },
+            Parser.First.Where<ArraySlice<UInt8>> { $0 == 0x42 }
         )
-        var input = Parser.Test.Input([0x42, 0x43])
+        var input = ArraySlice<UInt8>([0x42, 0x43])
 
         _ = try parser.parse(&input)
 
@@ -137,10 +138,10 @@ extension `Parser.Invariant`.`Input Position` {
 
     @Test
     func `Optional restores position on failure`() {
-        let parser = Parser.Optionally<Parser.First.Where<Parser.Test.Input>> {
-            Parser.First.Where<Parser.Test.Input> { $0 == 0xFF }
+        let parser = Parser.Optionally<Parser.First.Where<ArraySlice<UInt8>>> {
+            Parser.First.Where<ArraySlice<UInt8>> { $0 == 0xFF }
         }
-        var input = Parser.Test.Input([0x01, 0x02])
+        var input = ArraySlice<UInt8>([0x01, 0x02])
         let checkpoint = input.checkpoint
 
         _ = parser.parse(&input)
@@ -152,10 +153,10 @@ extension `Parser.Invariant`.`Input Position` {
 extension `Parser.Invariant`.Algebra {
     @Test
     func `map identity law`() throws(any Swift.Error) {
-        let base = Parser.First.Element<Parser.Test.Input>()
+        let base = Parser.First.Element<ArraySlice<UInt8>>()
         let mapped = base.map { $0 }
-        var input1 = Parser.Test.Input([0x42])
-        var input2 = Parser.Test.Input([0x42])
+        var input1 = ArraySlice<UInt8>([0x42])
+        var input2 = ArraySlice<UInt8>([0x42])
 
         let result1 = try base.parse(&input1)
         let result2 = try mapped.parse(&input2)
@@ -169,11 +170,11 @@ extension `Parser.Invariant`.Algebra {
         let f: @Sendable (UInt8) -> Int = { Int($0) }
         let g: @Sendable (Int) -> String = { "\($0)" }
 
-        let chained = Parser.First.Element<Parser.Test.Input>().map(f).map(g)
-        let composed = Parser.First.Element<Parser.Test.Input>().map { g(f($0)) }
+        let chained = Parser.First.Element<ArraySlice<UInt8>>().map(f).map(g)
+        let composed = Parser.First.Element<ArraySlice<UInt8>>().map { g(f($0)) }
 
-        var input1 = Parser.Test.Input([0x0A])
-        var input2 = Parser.Test.Input([0x0A])
+        var input1 = ArraySlice<UInt8>([0x0A])
+        var input2 = ArraySlice<UInt8>([0x0A])
 
         let result1 = try chained.parse(&input1)
         let result2 = try composed.parse(&input2)
@@ -189,11 +190,11 @@ extension `Parser.Invariant`.Algebra {
             Parser.Test.Take(Int(count))
         }
 
-        let lhs = Always<UInt8>.Parser<Parser.Test.Input>(value).flatMap(f)
+        let lhs = Always<UInt8>.Parser<ArraySlice<UInt8>>(value).flatMap(f)
         let rhs = f(value)
 
-        var input1 = Parser.Test.Input([0x01, 0x02, 0x03, 0x04, 0x05, 0x06])
-        var input2 = Parser.Test.Input([0x01, 0x02, 0x03, 0x04, 0x05, 0x06])
+        var input1 = ArraySlice<UInt8>([0x01, 0x02, 0x03, 0x04, 0x05, 0x06])
+        var input2 = ArraySlice<UInt8>([0x01, 0x02, 0x03, 0x04, 0x05, 0x06])
 
         let result1 = try lhs.parse(&input1)
         let result2 = try rhs.parse(&input2)
@@ -204,11 +205,11 @@ extension `Parser.Invariant`.Algebra {
 
     @Test
     func `flatMap right identity`() throws(any Swift.Error) {
-        let base = Parser.First.Element<Parser.Test.Input>()
-        let lifted = base.flatMap { Always<UInt8>.Parser<Parser.Test.Input>($0) }
+        let base = Parser.First.Element<ArraySlice<UInt8>>()
+        let lifted = base.flatMap { Always<UInt8>.Parser<ArraySlice<UInt8>>($0) }
 
-        var input1 = Parser.Test.Input([0x42, 0x43])
-        var input2 = Parser.Test.Input([0x42, 0x43])
+        var input1 = ArraySlice<UInt8>([0x42, 0x43])
+        var input2 = ArraySlice<UInt8>([0x42, 0x43])
 
         let result1 = try base.parse(&input1)
         let result2 = try lifted.parse(&input2)
@@ -221,9 +222,9 @@ extension `Parser.Invariant`.Algebra {
 extension `Parser.Invariant`.`Error Propagation` {
     @Test
     func `FlatMap tags upstream error as left`() {
-        let parser = Parser.First.Element<Parser.Test.Input>()
-            .flatMap { _ in Always<Int>.Parser<Parser.Test.Input>(0) }
-        var input = Parser.Test.Input([])
+        let parser = Parser.First.Element<ArraySlice<UInt8>>()
+            .flatMap { _ in Always<Int>.Parser<ArraySlice<UInt8>>(0) }
+        var input = ArraySlice<UInt8>([])
 
         #expect {
             try parser.parse(&input)
@@ -241,11 +242,11 @@ extension `Parser.Invariant`.`Error Propagation` {
 
     @Test
     func `FlatMap tags downstream error as right`() {
-        let parser = Always<UInt8>.Parser<Parser.Test.Input>(10)
+        let parser = Always<UInt8>.Parser<ArraySlice<UInt8>>(10)
             .flatMap { count -> Parser.Test.Take in
                 Parser.Test.Take(Int(count))
             }
-        var input = Parser.Test.Input([0x01, 0x02])
+        var input = ArraySlice<UInt8>([0x01, 0x02])
 
         #expect {
             try parser.parse(&input)
@@ -264,10 +265,10 @@ extension `Parser.Invariant`.`Error Propagation` {
     @Test
     func `OneOf exposes error when all branches fail`() {
         let parser = Parser.OneOf.Two(
-            Parser.First.Where<Parser.Test.Input> { $0 == 0x41 },
-            Parser.First.Where<Parser.Test.Input> { $0 == 0x42 }
+            Parser.First.Where<ArraySlice<UInt8>> { $0 == 0x41 },
+            Parser.First.Where<ArraySlice<UInt8>> { $0 == 0x42 }
         )
-        var input = Parser.Test.Input([0x43])
+        var input = ArraySlice<UInt8>([0x43])
 
         #expect(throws: (any Swift.Error).self) {
             try parser.parse(&input)
@@ -279,10 +280,10 @@ extension `Parser.Invariant`.`Checkpoint Restore` {
     @Test
     func `OneOf.Two restores position on first-branch failure`() throws(any Swift.Error) {
         let parser = Parser.OneOf.Two(
-            Parser.First.Where<Parser.Test.Input> { $0 == 0xFF }.map { _ in "first" },
-            Parser.First.Element<Parser.Test.Input>().map { _ in "second" }
+            Parser.First.Where<ArraySlice<UInt8>> { $0 == 0xFF }.map { _ in "first" },
+            Parser.First.Element<ArraySlice<UInt8>>().map { _ in "second" }
         )
-        var input = Parser.Test.Input([0x42])
+        var input = ArraySlice<UInt8>([0x42])
 
         let result = try parser.parse(&input)
 
@@ -292,8 +293,8 @@ extension `Parser.Invariant`.`Checkpoint Restore` {
 
     @Test
     func `Peek does not consume on success`() throws(any Swift.Error) {
-        let parser = Parser.First.Element<Parser.Test.Input>().peek()
-        var input = Parser.Test.Input([0x41, 0x42])
+        let parser = Parser.First.Element<ArraySlice<UInt8>>().peek()
+        var input = ArraySlice<UInt8>([0x41, 0x42])
         let before = input.checkpoint
 
         _ = try parser.parse(&input)
@@ -303,8 +304,8 @@ extension `Parser.Invariant`.`Checkpoint Restore` {
 
     @Test
     func `Not does not consume on success when inner fails`() throws(any Swift.Error) {
-        let parser = Parser.First.Where<Parser.Test.Input> { $0 == 0xFF }.not()
-        var input = Parser.Test.Input([0x01])
+        let parser = Parser.First.Where<ArraySlice<UInt8>> { $0 == 0xFF }.not()
+        var input = ArraySlice<UInt8>([0x01])
         let before = input.checkpoint
 
         try parser.parse(&input)
@@ -314,13 +315,13 @@ extension `Parser.Invariant`.`Checkpoint Restore` {
 
     @Test
     func `Optional restores on inner failure`() {
-        let parser = Parser.Optionally<Parser.First.Where<Parser.Test.Input>> {
-            Parser.First.Where<Parser.Test.Input> { $0 == 0xFF }
+        let parser = Parser.Optionally<Parser.First.Where<ArraySlice<UInt8>>> {
+            Parser.First.Where<ArraySlice<UInt8>> { $0 == 0xFF }
         }
-        var input = Parser.Test.Input([0x01, 0x02, 0x03])
+        var input = ArraySlice<UInt8>([0x01, 0x02, 0x03])
         let before = input.checkpoint
 
-        let result: Parser.First.Where<Parser.Test.Input>.Output? = parser.parse(&input)
+        let result: Parser.First.Where<ArraySlice<UInt8>>.Output? = parser.parse(&input)
 
         #expect(result == nil)
         #expect(input.checkpoint == before)
@@ -330,8 +331,8 @@ extension `Parser.Invariant`.`Checkpoint Restore` {
 extension `Parser.Invariant`.Boundary {
     @Test
     func `empty input - First.Element fails`() {
-        let parser = Parser.First.Element<Parser.Test.Input>()
-        var input = Parser.Test.Input([])
+        let parser = Parser.First.Element<ArraySlice<UInt8>>()
+        var input = ArraySlice<UInt8>([])
 
         #expect(throws: Parser.EndOfInput.Error.self) {
             try parser.parse(&input)
@@ -341,7 +342,7 @@ extension `Parser.Invariant`.Boundary {
     @Test
     func `empty input - Rest returns empty`() {
         let parser = Parser.Test.Rest()
-        var input = Parser.Test.Input([])
+        var input = ArraySlice<UInt8>([])
 
         let result = parser.parse(&input)
 
@@ -351,15 +352,15 @@ extension `Parser.Invariant`.Boundary {
     @Test
     func `empty input - End succeeds`() throws(any Swift.Error) {
         let parser = Parser.Test.End()
-        var input = Parser.Test.Input([])
+        var input = ArraySlice<UInt8>([])
 
         try parser.parse(&input)
     }
 
     @Test
     func `single element - First.Element consumes all`() throws(any Swift.Error) {
-        let parser = Parser.First.Element<Parser.Test.Input>()
-        var input = Parser.Test.Input([0xFF])
+        let parser = Parser.First.Element<ArraySlice<UInt8>>()
+        var input = ArraySlice<UInt8>([0xFF])
 
         _ = try parser.parse(&input)
 
@@ -370,7 +371,7 @@ extension `Parser.Invariant`.Boundary {
     func `many with large input`() throws(any Swift.Error) {
         let bytes = [UInt8](repeating: 0x41, count: 1000) + [0x42]
         let parser = Parser.Test.TakeWhile { $0 == 0x41 }
-        var input = Parser.Test.Input(bytes)
+        var input = ArraySlice<UInt8>(bytes)
 
         let result = parser.parse(&input)
 

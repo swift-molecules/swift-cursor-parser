@@ -14,7 +14,7 @@ extension Parser.Many where Source: ~Copyable & ~Escapable {
 
         public typealias Output = [Element.Output]
 
-        public typealias Failure = Parser.Many<Source, Element>.Error
+        public typealias Failure = Error
 
         public let element: Element
 
